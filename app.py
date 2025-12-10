@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Минималистичный счетчик дней - только цифра
+Минималистичный счетчик дней с настраиваемой подписью
 """
 
 from flask import Flask, render_template
@@ -11,8 +11,9 @@ import os
 
 app = Flask(__name__)
 
-# Глобальная переменная для даты отсчета
+# Глобальные переменные
 DEFAULT_DATE = None
+CUSTOM_LABEL = None
 
 def parse_date(date_str):
     """Парсит дату из строки"""
@@ -30,21 +31,25 @@ def parse_date(date_str):
 
 @app.route('/')
 def index():
-    """Главная страница - только счетчик"""
-    global DEFAULT_DATE
+    """Главная страница - только счетчик с настраиваемой подписью"""
+    global DEFAULT_DATE, CUSTOM_LABEL
     
     if not DEFAULT_DATE:
         DEFAULT_DATE = date.today()
+    
+    if not CUSTOM_LABEL:
+        CUSTOM_LABEL = "Дней прошло:"
     
     # Вычисляем разницу в днях
     today = date.today()
     days_diff = (today - DEFAULT_DATE).days
     
-    # Создаем минимальный контекст
+    # Создаем контекст
     context = {
         'days_diff': days_diff,
         'target_date': DEFAULT_DATE.strftime('%d.%m.%Y'),
-        'today': today.strftime('%d.%m.%Y')
+        'today': today.strftime('%d.%m.%Y'),
+        'label': CUSTOM_LABEL
     }
     
     return render_template('index.html', **context)
@@ -56,12 +61,25 @@ def health():
 
 def main():
     """Точка входа"""
-    global DEFAULT_DATE
+    global DEFAULT_DATE, CUSTOM_LABEL
     
     # Парсим аргументы командной строки
-    parser = argparse.ArgumentParser(description='Минималистичный счетчик дней')
+    parser = argparse.ArgumentParser(
+        description='Минималистичный счетчик дней с настраиваемой подписью',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Примеры использования:
+  python app.py --date 2024-01-01 --label "Дней с Нового Года:"
+  python app.py --date 2023-06-15 --label "Дней работы:"
+  python app.py --date 2024-01-01 --label "📅 Прошло дней:"
+        """
+    )
+    
     parser.add_argument('--date', '-d', type=str, required=True, 
                        help='Дата отсчета в формате ГГГГ-ММ-ДД')
+    
+    parser.add_argument('--label', '-l', type=str, default="Дней прошло:",
+                       help='Надпись над счетчиком (по умолчанию: "Дней прошло:")')
     
     # Аргументы хоста и порта - с дефолтами из переменных окружения
     default_host = os.getenv('HOST', '0.0.0.0')
@@ -74,11 +92,13 @@ def main():
     
     args = parser.parse_args()
     
-    # Парсим дату
+    # Устанавливаем значения
     DEFAULT_DATE = parse_date(args.date)
+    CUSTOM_LABEL = args.label
     
     print(f"🚀 Минималистичный счетчик дней")
     print(f"📅 Дата отсчета: {DEFAULT_DATE.strftime('%d.%m.%Y')}")
+    print(f"🏷️  Надпись: '{CUSTOM_LABEL}'")
     print(f"🔢 Отображается только число дней")
     print(f"🌐 Адрес: http://{args.host}:{args.port}")
     print(f"❤️  Health check: http://{args.host}:{args.port}/health")

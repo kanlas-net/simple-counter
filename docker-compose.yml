@@ -6,7 +6,11 @@ services:
     container_name: days-counter
     ports:
       - "5000:5000"
-    command: ["--date", "2024-01-01"]
+    command:
+      - "--date"
+      - "2024-01-01"
+      - "--label"
+      - "🎄 Дней после Нового Года:"
     environment:
       - HOST=0.0.0.0
       - PORT=5000
