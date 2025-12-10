@@ -1,0 +1,22 @@
+# Игнорируемые файлы
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+env.bak/
+venv.bak/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+.dockerignore
+.git/
+.gitignore
+README.md
+docker-compose.yml

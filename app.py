@@ -7,6 +7,7 @@ from flask import Flask, render_template
 from datetime import datetime, date
 import argparse
 import sys
+import os
 
 app = Flask(__name__)
 
@@ -48,17 +49,28 @@ def index():
     
     return render_template('index.html', **context)
 
+@app.route('/health')
+def health():
+    """Health check для Docker/Kubernetes"""
+    return {'status': 'healthy', 'service': 'days-counter'}
+
 def main():
     """Точка входа"""
     global DEFAULT_DATE
     
+    # Парсим аргументы командной строки
     parser = argparse.ArgumentParser(description='Минималистичный счетчик дней')
     parser.add_argument('--date', '-d', type=str, required=True, 
                        help='Дата отсчета в формате ГГГГ-ММ-ДД')
-    parser.add_argument('--host', type=str, default='127.0.0.1',
-                       help='Хост (по умолчанию: 127.0.0.1)')
-    parser.add_argument('--port', '-p', type=int, default=5000,
-                       help='Порт (по умолчанию: 5000)')
+    
+    # Аргументы хоста и порта - с дефолтами из переменных окружения
+    default_host = os.getenv('HOST', '0.0.0.0')
+    default_port = int(os.getenv('PORT', '5000'))
+    
+    parser.add_argument('--host', type=str, default=default_host,
+                       help=f'Хост (по умолчанию: {default_host})')
+    parser.add_argument('--port', '-p', type=int, default=default_port,
+                       help=f'Порт (по умолчанию: {default_port})')
     
     args = parser.parse_args()
     
@@ -69,6 +81,7 @@ def main():
     print(f"📅 Дата отсчета: {DEFAULT_DATE.strftime('%d.%m.%Y')}")
     print(f"🔢 Отображается только число дней")
     print(f"🌐 Адрес: http://{args.host}:{args.port}")
+    print(f"❤️  Health check: http://{args.host}:{args.port}/health")
     print("\n🛑 Для остановки нажмите Ctrl+C")
     
     app.run(host=args.host, port=args.port, debug=False)
