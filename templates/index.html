@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, {{ color_start }} 0%, {{ color_end }} 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -21,6 +21,7 @@
             color: white;
             text-align: center;
             padding: 20px;
+            transition: background 1s ease;
         }
         
         .counter-container {
@@ -124,17 +125,6 @@
             }
         }
         
-        @media (max-width: 320px) {
-            .counter-label {
-                font-size: 1.4rem;
-            }
-            
-            .counter-number {
-                font-size: 5rem;
-                min-height: 6rem;
-            }
-        }
-        
         /* Анимация появления числа */
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.9); }
@@ -143,11 +133,6 @@
         
         .counter-number {
             animation: fadeIn 0.8s ease-out;
-        }
-        
-        /* Поддержка эмодзи */
-        .counter-label {
-            font-family: 'Arial', 'Segoe UI Emoji', 'Apple Color Emoji', sans-serif;
         }
     </style>
 </head>
