@@ -3,7 +3,7 @@
 Минималистичный счетчик дней с настраиваемой подписью и цветом фона
 """
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 from datetime import datetime, date
 import argparse
 import sys
@@ -61,6 +61,12 @@ def parse_color(color_str):
     
     # По умолчанию синий градиент
     return gradients['blue']
+
+@app.route('/favicon.ico')
+def favicon():
+    """Обработка favicon"""
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/')
 def index():
