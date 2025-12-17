@@ -10,5 +10,5 @@ docker run -p 5000:5000 ghcr.io/kanlas-net/simple-counter \
   --counter incident2 2025-01-01 "Дней без проблем" '#000000-#ffffff'
 
 # Create counter dynamically by url
-http://localhost:5000/terraform?date=2023-01-01&label=Дней%20без%20аварий&color=purple
-http://localhost:5000/terraform?date=2023-01-01&label=Дней%20без%20проблем&color=%23000000-%23ffffff
+http://localhost:5000/incident1?date=2023-01-01&label=Дней%20без%20аварий&color=purple
+http://localhost:5000/incident2?date=2023-01-01&label=Дней%20без%20проблем&color=%23000000-%23ffffff
