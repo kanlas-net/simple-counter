@@ -1,46 +1,14 @@
-# Базовая команда
-docker run -p 5000:5000 days-counter --date 2024-01-01
+# Run python app
+python app.py \
+  --counter incident1 2024-01-01 "Дней без аварий" purple \
+  --counter incident2 2025-01-01 "Дней без проблем" '#000000-#ffffff' \
+  --host 0.0.0.0 --port 5000
 
-# С другим портом
-docker run -p 8080:5000 days-counter --date 2024-01-01
+# Run in docker
+docker run -p 5000:5000 ghcr.io/kanlas-net/simple-counter \
+  --counter incident1 2024-01-01 "Дней без аварий" purple \
+  --counter incident2 2025-01-01 "Дней без проблем" '#000000-#ffffff'
 
-# С переменными окружения
-docker run -p 5000:5000 -e PORT=5000 -e HOST=0.0.0.0 days-counter --date 2024-01-01
-
-# Дата в прошлом
-docker run -p 5000:5000 days-counter --date 2024-01-01
-
-# Дата в будущем (отрицательное число)
-docker run -p 5000:5000 days-counter --date 2026-01-01
-
-# Сегодняшняя дата
-docker run -p 5000:5000 days-counter --date $(date +%Y-%m-%d)
-
-# Вчерашняя дата
-docker run -p 5000:5000 days-counter --date $(date -d "yesterday" +%Y-%m-%d)
-
-# Запуск с подписью
-docker run -p 5000:5000 days-counter --date 2024-01-01 --label "Дней с Нового Года:"
-
-# С эмодзи
-docker run -p 5000:5000 days-counter --date 2024-01-01 --label "📅 Дней календаря:"
-
-# Длинная подпись
-docker run -p 5000:5000 days-counter --date 2023-06-01 --label "Количество дней, прошедших с начала лета:"
-
-# Фиолетовый фон
-docker run -p 5000:5000 days-counter --date 2024-01-01 --color purple
-
-# Черно-белый фон
-docker run -p 5000:5000 days-counter --date 2024-01-01 --color "#000000-#ffffff"
-
-# Предустановленные градиенты
-* blue - #667eea → #764ba2 (сине-фиолетовый)
-* green - #11998e → #38ef7d (зеленый)
-* orange - #f46b45 → #eea849 (оранжевый)
-* purple - #8a2be2 → #da70d6 (фиолетовый)
-* red - #ff416c → #ff4b2b (красный)
-* sunset - #ff7e5f → #feb47b (закат)
-* ocean - #2193b0 → #6dd5ed (океан)
-* forest - #56ab2f → #a8e063 (лесной)
-* berry - #8e2de2 → #4a00e0 (ягодный)
+# Create counter dynamically by url
+http://localhost:5000/terraform?date=2023-01-01&label=Дней%20без%20аварий&color=purple
+http://localhost:5000/terraform?date=2023-01-01&label=Дней%20без%20проблем&color=%23000000-%23ffffff
